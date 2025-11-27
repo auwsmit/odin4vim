@@ -26,11 +26,11 @@ function! GetOdinIndent(lnum)
   let ind = indent(prev)
 
   if prevline =~ '[({]\s*$'
-    let ind += &sw
+    let ind += shiftwidth()
   endif
 
   if line =~ '^\s*[)}]'
-    let ind -= &sw
+    let ind -= shiftwidth()
   endif
 
   return ind
