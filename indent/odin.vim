@@ -62,6 +62,8 @@ function s:GetOdinIndent(lnum) abort
         else
             let indent = pindent
         endif
+    elseif pline =~# '\<do\>\s\+\S' && pline !~# '{\s*$'
+        let indent = pindent
     elseif pline =~# '\<switch\>\s.*{\s*$'
         let indent = pindent
     elseif pline =~# '\<case\>\s*.*,\s*\(//.*\)\?$' " https://github.com/habamax/vim-odin/issues/8
