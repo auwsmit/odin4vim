@@ -1,3 +1,7 @@
+" Forked from https://github.com/Tetralux/odin.vim,
+" which was derived from https://github.com/jansedivy/jai.vim
+" License: MIT (see LICENSE file)
+
 if exists("b:current_syntax")
   finish
 endif
@@ -47,11 +51,11 @@ syntax keyword odinOrContinue or_continue
 syntax keyword odinInline #force_inline
 syntax keyword odinNoInline #force_no_inline
 
-syntax match odinTodo "TODO"
-syntax match odinNote "NOTE"
-syntax match odinXXX "XXX"
-syntax match odinFixMe "FIXME"
-syntax match odinHack "HACK"
+syntax keyword odinTodo TODO
+syntax keyword odinNote NOTE
+syntax keyword odinXXX XXX
+syntax keyword odinFixMe FIXME
+syntax keyword odinHack HACK
 
 syntax keyword odinDataType string cstring bool b8 b16 b32 b64 rune any rawptr f16 f32 f64 f16le f16be f32le f32be f64le f64be u8 u16 u32 u64 u128 u16le u32le u64le u128le u16be u32be u64be u128be uint uintptr i8 i16 i32 i64 i128 i16le i32le i64le i128le i16be i32be i64be i128be int complex complex32 complex64 complex128 quaternion quaternion64 quaternion128 quaternion256 matrix typeid byte
 syntax keyword odinBool true false
@@ -62,7 +66,6 @@ syntax keyword odinProc proc
 syntax keyword odinIn in
 syntax keyword odinNotIn not_in
 syntax keyword odinImport import
-syntax keyword odinExport export
 syntax keyword odinForeign foreign
 syntax keyword odinConst const
 syntax match odinNoinit "---"
@@ -163,13 +166,12 @@ highlight link odinHack Todo
 highlight link odinDataType Type
 highlight link odinBool Boolean
 highlight link odinNull Type
-highlight link odinDynamic Operator
-highlight link odinMap Operator
-highlight link odinProc Function
+highlight link odinDynamic Structure
+highlight link odinMap Structure
+highlight link odinProc Keyword
 highlight link odinIn Operator
 highlight link odinNotIn Operator
 highlight link odinImport Keyword
-highlight link odinExport Keyword
 highlight link odinForeign Keyword
 highlight link odinNoinit Keyword
 highlight link odinPackage Keyword
@@ -181,7 +183,7 @@ highlight link odinString String
 highlight link odinChar String
 highlight link odinEscape SpecialChar
 
-highlight link odinFunctionDecl Number
+highlight link odinFunctionDecl Function
 highlight link odinFunctionCall Function
 
 highlight link odinTagNote Identifier
