@@ -1,21 +1,22 @@
-" Vim indent plugin file
-" Language: Odin
-" Maintainer: Maxim Kim <habamax@gmail.com>
-" Website: https://github.com/habamax/vim-odin
-" Last Change: 2026-02-02
-"
+" Forked from https://github.com/habamax/vim-odin by Maxim Kim
+" License: VIM LICENSE
+
 " This file has been manually translated from Vim9 script.
+
 if exists("b:did_indent")
     finish
 endif
+
 let b:did_indent = 1
 let s:cpo_save = &cpo
 set cpo&vim
 let b:undo_indent = 'setlocal cindent< cinoptions< cinkeys< indentexpr<'
+
 setlocal cindent
 setlocal cinoptions=L0,m1,(s,j1,J1,l1,+0,:0,#3
 setlocal cinkeys=0{,0},0),0],!^F,:,o,O
 setlocal indentexpr=s:GetOdinIndent(v:lnum)
+
 function s:PrevLine(lnum) abort
     let plnum = a:lnum - 1
     while plnum > 1
@@ -39,10 +40,12 @@ function s:PrevLine(lnum) abort
     endwhile
     return plnum
 endfunction
+
 function s:GetOdinIndent(lnum) abort
     let plnum = s:PrevLine(a:lnum)
     let pline = getline(plnum)
     let pindent = indent(plnum)
+
     " workaround of cindent "hang"
     " if the previous line looks like:
     " : #{}
@@ -52,8 +55,10 @@ function s:GetOdinIndent(lnum) abort
     if pline =~# ':\s\+#.*{.*}'
         return pindent
     endif
+
     let indent = cindent(a:lnum)
     let line = getline(a:lnum)
+
     if line =~# '^\s*#+\k'
         let indent = pindent
     elseif line =~# '^\s*#\k\+'
@@ -111,7 +116,9 @@ function s:GetOdinIndent(lnum) abort
             let indent = pindent
         endif
     endif
+
     return indent
 endfunction
+
 let &cpo = s:cpo_save
 unlet s:cpo_save
