@@ -6,7 +6,7 @@ if exists("b:current_syntax")
   finish
 endif
 
-" Definitions {{{
+" == Definitions == {{{
 
 " Keywords {{{
 syntax keyword odinPackage package
@@ -14,7 +14,6 @@ syntax keyword odinImport import
 syntax keyword odinProc proc
 syntax keyword odinForeign foreign
 syntax keyword odinConst const
-syntax keyword odinWhere where
 syntax keyword odinContext context
 syntax keyword odinDistinct distinct
 syntax keyword odinUsing using
@@ -36,12 +35,10 @@ syntax match odinProcCall "\v\w+\s*(\()@=" display
 " }}}
 
 " Control flow {{{
-
 syntax keyword odinMainControl if else when where do defer return
 syntax keyword odinSwitchControl switch case continue break fallthrough
 syntax keyword odinOrUnderscore or_return or_else or_break or_continue
 syntax keyword odinFor for
-
 " }}}
 
 " Types {{{
@@ -91,7 +88,8 @@ syntax match odinVariadic "\.\." display
 syntax match odinRange "\V..=\|..<" display
 syntax keyword odinInNotIn in not_in
 
-" Optional
+" NOTE: Optional, disabled by default to reduce noise
+" syntax match odinSemicolon ";" display
 " syntax match odinComma "," display
 " syntax match odinPeriod "\v\.%([0-9])@!" display
 " syntax match odinArrayBrackets "\[\|\]" display
@@ -103,23 +101,22 @@ syntax region odinLineComment start=/\/\// end=/$/  contains=odinCommentNote, od
 syntax region odinBlockComment start=/\v\/\*/ end=/\v\*\// contains=odinBlockComment, odinCommentNote
 syntax sync ccomment odinBlockComment
 " }}}
-" }}}
+" }}} == Definitions END ==
 
-" Links {{{
+" == Links == {{{
 
 " Keywords {{{
 highlight link odinPackage Keyword
 highlight link odinImport Keyword
 highlight link odinProc Keyword
 highlight link odinForeign Keyword
-highlight link odinContext Keyword
 highlight link odinConst Keyword
+highlight link odinContext Keyword
 highlight link odinDistinct Keyword
 highlight link odinUsing Keyword
 highlight link odinCast Keyword
 highlight link odinGetInfoOf Keyword
 highlight link odinAsm Keyword
-
 " }}}
 
 " Directives and Attributes {{{
@@ -129,11 +126,17 @@ highlight link odinBuildTag Macro
 highlight link odinAttributeSurround Macro
 " }}}
 
+" Procedures {{{
+highlight link odinProcDeclaration Function
+highlight link odinProcCall Function
+" }}}
+
 " Control flow {{{
 highlight link odinMainControl Conditional
 highlight link odinSwitchControl Conditional
 highlight link odinOrUnderscore Conditional
 highlight link odinFor Repeat
+" }}}
 
 " Types {{{
 highlight link odinBasicType Type
@@ -163,11 +166,6 @@ highlight link odinChar String
 highlight link odinEscape SpecialChar
 " }}}
 
-" Procedures {{{
-highlight link odinProcDeclaration Function
-highlight link odinProcCall Function
-" }}}
-
 " Operators {{{
 highlight link odinArithmeticOp Operator
 highlight link odinBinaryOp Operator
@@ -188,6 +186,7 @@ highlight link odinRange Operator
 highlight link odinInNotIn Operator
 
 highlight link odinComma Operator
+highlight link odinSemicolon Operator
 highlight link odinPeriod Operator
 highlight link odinArrayBrackets Operator
 " }}}
@@ -197,7 +196,7 @@ highlight link odinCommentNote Todo
 highlight link odinLineComment Comment
 highlight link odinBlockComment Comment
 " }}}
-" }}}
+" }}} == Links END ==
 
 let b:current_syntax = "odin"
 " vim: set foldmethod=marker:
