@@ -6,213 +6,198 @@ if exists("b:current_syntax")
   finish
 endif
 
-syntax keyword odinAsm asm
-syntax keyword odinContext context
-syntax keyword odinUsing using
-syntax keyword odinTransmute transmute
-syntax keyword odinCast cast
-syntax keyword odinAutoCast auto_cast
-syntax keyword odinDistinct distinct
-syntax keyword odinOpaque opaque
-syntax keyword odinWhere where
+" Definitions {{{
 
-syntax keyword odinStruct struct
-syntax keyword odinEnum enum
-syntax keyword odinUnion union
-syntax keyword odinBitField bit_field
-syntax keyword odinBitSet bit_set
-
-syntax keyword odinIf if
-syntax keyword odinWhen when
-syntax keyword odinElse else
-syntax keyword odinDo do
-syntax keyword odinFor for
-
-syntax keyword odinSwitch switch
-syntax keyword odinCase case
-syntax keyword odinContinue continue
-syntax keyword odinBreak break
-syntax keyword odinFallthrough fallthrough
-
-syntax keyword odinSizeOf size_of
-syntax keyword odinOffsetOf offset_of
-syntax keyword odinTypeInfoOf type_info_of
-syntax keyword odinTypeIdOf typeid_of
-syntax keyword odinTypeOf type_of
-syntax keyword odinAlignOf align_of
-
-syntax keyword odinReturn return
-syntax keyword odinDefer defer
-syntax keyword odinOrReturn or_return
-syntax keyword odinOrElse or_else
-syntax keyword odinOrBreak or_break
-syntax keyword odinOrContinue or_continue
-
-syntax keyword odinInline #force_inline
-syntax keyword odinNoInline #force_no_inline
-
-syntax keyword odinTodo TODO
-syntax keyword odinNote NOTE
-syntax keyword odinXXX XXX
-syntax keyword odinFixMe FIXME
-syntax keyword odinHack HACK
-
-syntax keyword odinDataType string cstring bool b8 b16 b32 b64 rune any rawptr f16 f32 f64 f16le f16be f32le f32be f64le f64be u8 u16 u32 u64 u128 u16le u32le u64le u128le u16be u32be u64be u128be uint uintptr i8 i16 i32 i64 i128 i16le i32le i64le i128le i16be i32be i64be i128be int complex complex32 complex64 complex128 quaternion quaternion64 quaternion128 quaternion256 matrix typeid byte
-syntax keyword odinBool true false
-syntax keyword odinNull nil
-syntax keyword odinDynamic dynamic
-syntax keyword odinMap map
-syntax keyword odinProc proc
-syntax keyword odinIn in
-syntax keyword odinNotIn not_in
+" Keywords {{{
+syntax keyword odinPackage package
 syntax keyword odinImport import
+syntax keyword odinProc proc
 syntax keyword odinForeign foreign
 syntax keyword odinConst const
-syntax match odinNoinit "---"
-syntax keyword odinPackage package
-syntax match odinBuildTag "^#+.*$"
-syntax match odinShebang "^#!.*$"
+syntax keyword odinWhere where
+syntax keyword odinContext context
+syntax keyword odinDistinct distinct
+syntax keyword odinUsing using
+syntax keyword odinCast cast auto_cast transmute
+syntax keyword odinGetInfoOf size_of offset_of type_info_of typeid_of type_of align_of
+syntax keyword odinAsm asm
+" }}}
 
-syntax region odinRawString start=+`+ end=+`+
-syntax region odinChar start=+'+ skip=+\\\\\|\\'+ end=+'+
-syntax region odinString start=+"+ skip=+\\\\\|\\'+ end=+"+ contains=odinEscape
-syntax match odinEscape display contained /\\\([abefnrtv\\'"]\|x\x\{2}\|u\x\{4}\|U\x\{8}\|[0-7]\{3}\)/
+" Directives and Attributes {{{
+syntax match odinShebang "^#!.*$" display " for shell scripts
+syntax match odinBuildTag "^#+.*$" display contains=odinLineComment, odinBlockComment
+syntax match odinDirective "#\<\w\+\>" display
+syntax region odinAttribute matchgroup=odinAttributeSurround start="@(" end=")" display contains=TOP
+" }}}
 
-syntax match odinFunctionDecl "\v<\w*>(\s*::\s*(#.*\s*)?proc)@="
-syntax match odinFunctionCall "\v\w+\s*(\()@="
+" Procedures {{{
+syntax match odinProcDeclaration "\v<\w*>(\s*:\s*:\s*(#.*\s*)?proc)@=" display
+syntax match odinProcCall "\v\w+\s*(\()@=" display
+" }}}
 
-syntax match odinTagNote "@\<\w\+\>" display
+" Control flow {{{
 
-syntax match odinConstant "\v<[A-Z0-9,_]+>" display
-syntax match odinRange "\.\.=\|\.\.<" display
-syntax match odinTernaryQMark "?" display
-syntax match odinDeclaration "\:\:\?" display
-syntax match odinDeclAssign ":=" display
-syntax match odinAssign "=" display
-syntax match odinReturnOp "->" display
+syntax keyword odinMainControl if else when where do defer return
+syntax keyword odinSwitchControl switch case continue break fallthrough
+syntax keyword odinOrUnderscore or_return or_else or_break or_continue
+syntax keyword odinFor for
 
+" }}}
+
+" Types {{{
+syntax keyword odinBasicType string cstring bool b8 b16 b32 b64 rune any rawptr f16 f32 f64 f16le f16be f32le f32be f64le f64be u8 u16 u32 u64 u128 u16le u32le u64le u128le u16be u32be u64be u128be uint uintptr i8 i16 i32 i64 i128 i16le i32le i64le i128le i16be i32be i64be i128be int complex complex32 complex64 complex128 quaternion quaternion64 quaternion128 quaternion256 typeid byte
+syntax keyword odinAdvancedType struct enum union map bit_set bit_field dynamic matrix
+syntax match odinTemplate "$\<\w\+\>" display
+" }}}
+
+" Numbers {{{
 syntax match odinIntFloat '\v<\d(\d|_)*(\.\d(\d|_)*)?([eE][+-]?\d+)?[ijk]?>' display
 syntax match odinBin '\v<0b[01]+%(_[01]+)*[ijk]?>' display
 syntax match odinOct '\v<0o[0-7]+%(_[0-7]+)*[ijk]?>' display
 syntax match odinDec '\v<0d\d+%(_\d+)*[ijk]?>' display
 syntax match odinHex '\v<0[xXh]\x+%(_\x+)*[ijk]?>' display
+" }}}
 
-syntax match odinAddressOf "&" display
-syntax match odinDeref "\^" display
-syntax match odinMaths "+\|-\|\/\|\*\|%" display
-syntax match odinCompares "<\|>\||\|!" display
-" syntax match odinMiscSymbols ",\|\.\%([0-9]\)\@!\|\[\|\]" display
+" Constants {{{
+syntax match odinUserConst "\w*\ze\s*:\s*\w*\s*:" contains=odinProcDeclaration
+syntax keyword odinBool true false
+syntax keyword odinNil nil
+syntax match odinNoInit "---"
+" }}}
 
-syntax match odinDirective "#\<\w\+\>" display
-syntax match odinTemplate "$\<\w\+\>"
+" Strings {{{
+syntax region odinRawString start=+`+ end=+`+
+syntax region odinChar start=+'+ skip=+\\\\\|\\'+ end=+'+
+syntax region odinString start=+"+ skip=+\\\\\|\\'+ end=+"+ contains=odinEscape
+syntax match odinEscape display contained /\\\([abefnrtv\\'"]\|x\x\{2}\|u\x\{4}\|U\x\{8}\|[0-7]\{3}\)/
+" }}}
 
-syntax match odinCommentNote "@\<\w\+\>" contained display
-syntax region odinLineComment start=/\/\// end=/$/  contains=odinCommentNote, odinTodo, odinNote, odinXXX, odinFixMe, odinHack
-syntax region odinBlockComment start=/\v\/\*/ end=/\v\*\// contains=odinBlockComment, odinCommentNote, odinTodo, odinNote, odinXXX, odinFixMe, odinHack
-syn sync ccomment odinBlockComment
+" Operators {{{
+syntax match odinArithmeticOp "+\|\*\|/\|%\|-\|!" contains=odinNoInit
+syntax match odinBinaryOp "!\|\~\||\|&" display
+syntax match odinComparison "\V==\|!=\|<\|<=\|>\|>=\|%%\|||" display
 
-highlight link odinAsm Keyword
+syntax match odinDeclaration "\:\:\?" display
+syntax match odinDeclAssign ":=" display
+syntax match odinAssign "=" display
+syntax match odinAddressOf "&\ze\w." display
+syntax match odinPointer "\^" display
+
+syntax match odinReturnOp "->" display
+syntax match odinTernaryQMark "?" display
+syntax match odinArrayQMark "\[\zs?\ze\]" display
+syntax match odinTypeQMark "\.\zs?" display
+syntax match odinVariadic "\.\." display
+syntax match odinRange "\V..=\|..<" display
+syntax keyword odinInNotIn in not_in
+
+" Optional
+" syntax match odinComma "," display
+" syntax match odinPeriod "\v\.%([0-9])@!" display
+" syntax match odinArrayBrackets "\[\|\]" display
+" }}}
+
+" Comments {{{
+syntax keyword odinCommentNote NOTE TODO XXX FIXME HACK contained
+syntax region odinLineComment start=/\/\// end=/$/  contains=odinCommentNote, odinCommentNote
+syntax region odinBlockComment start=/\v\/\*/ end=/\v\*\// contains=odinBlockComment, odinCommentNote
+syntax sync ccomment odinBlockComment
+" }}}
+" }}}
+
+" Links {{{
+
+" Keywords {{{
+highlight link odinPackage Keyword
+highlight link odinImport Keyword
+highlight link odinProc Keyword
+highlight link odinForeign Keyword
 highlight link odinContext Keyword
-highlight link odinUsing Keyword
-highlight link odinTransmute Keyword
-highlight link odinCast Keyword
-highlight link odinAutoCast Keyword
+highlight link odinConst Keyword
 highlight link odinDistinct Keyword
-highlight link odinOpaque Keyword
-highlight link odinWhere Keyword
+highlight link odinUsing Keyword
+highlight link odinCast Keyword
+highlight link odinGetInfoOf Keyword
+highlight link odinAsm Keyword
 
-highlight link odinStruct Structure
-highlight link odinEnum Structure
-highlight link odinUnion Structure
-highlight link odinBitField Structure
-highlight link odinBitSet Structure
+" }}}
 
-highlight link odinIf Conditional
-highlight link odinWhen Conditional
-highlight link odinElse Conditional
-highlight link odinDo Keyword
+" Directives and Attributes {{{
+highlight link odinShebang Comment
+highlight link odinDirective Macro
+highlight link odinBuildTag Macro
+highlight link odinAttributeSurround Macro
+" }}}
+
+" Control flow {{{
+highlight link odinMainControl Conditional
+highlight link odinSwitchControl Conditional
+highlight link odinOrUnderscore Conditional
 highlight link odinFor Repeat
 
-highlight link odinSwitch Keyword
-highlight link odinCase Keyword
-highlight link odinContinue Keyword
-highlight link odinBreak Keyword
-highlight link odinFallthrough Keyword
+" Types {{{
+highlight link odinBasicType Type
+highlight link odinAdvancedType Structure
+highlight link odinTemplate Constant
+" }}}
 
-highlight link odinSizeOf Keyword
-highlight link odinOffsetOf Keyword
-highlight link odinTypeOf Keyword
-highlight link odinTypeInfoOf Keyword
-highlight link odinTypeIdOf Keyword
-highlight link odinAlignOf Keyword
-
-highlight link odinReturn Keyword
-highlight link odinDefer Keyword
-highlight link odinOrReturn Keyword
-highlight link odinOrElse Keyword
-highlight link odinOrBreak Keyword
-highlight link odinOrContinue Keyword
-
-highlight link odinInline Keyword
-highlight link odinNoInline Keyword
-
-highlight link odinTodo Todo
-highlight link odinNote Todo
-highlight link odinXXX Todo
-highlight link odinFixMe Todo
-highlight link odinNoCheckin Todo
-highlight link odinHack Todo
-
-highlight link odinDataType Type
-highlight link odinBool Boolean
-highlight link odinNull Type
-highlight link odinDynamic Structure
-highlight link odinMap Structure
-highlight link odinProc Keyword
-highlight link odinIn Operator
-highlight link odinNotIn Operator
-highlight link odinImport Keyword
-highlight link odinForeign Keyword
-highlight link odinNoinit Keyword
-highlight link odinPackage Keyword
-highlight link odinBuildTag Macro
-highlight link odinShebang Comment
-
-highlight link odinRawString String
-highlight link odinString String
-highlight link odinChar String
-highlight link odinEscape SpecialChar
-
-highlight link odinFunctionDecl Function
-highlight link odinFunctionCall Function
-
-highlight link odinTagNote Identifier
-
-highlight link odinConstant Constant
-highlight link odinRange Operator
-highlight link odinTernaryQMark Operator
-highlight link odinDeclaration Operator
-highlight link odinDeclAssign Operator
-highlight link odinAssign Operator
-highlight link odinReturnOp Operator
-
+" Numbers {{{
 highlight link odinIntFloat Number
 highlight link odinBin Number
 highlight link odinOct Number
 highlight link odinDec Number
 highlight link odinHex Number
+" }}}
 
+" Constants {{{
+highlight link odinUserConst Constant
+highlight link odinBool Boolean
+highlight link odinNil Constant
+highlight link odinNoInit Constant
+" }}}
+
+" Strings {{{
+highlight link odinRawString String
+highlight link odinString String
+highlight link odinChar String
+highlight link odinEscape SpecialChar
+" }}}
+
+" Procedures {{{
+highlight link odinProcDeclaration Function
+highlight link odinProcCall Function
+" }}}
+
+" Operators {{{
+highlight link odinArithmeticOp Operator
+highlight link odinBinaryOp Operator
+highlight link odinComparison Operator
+
+highlight link odinDeclaration Operator
+highlight link odinDeclAssign Operator
+highlight link odinAssign Operator
 highlight link odinAddressOf Operator
-highlight link odinDeref Operator
-highlight link odinMaths Operator
-highlight link odinCompares Operator
-highlight link odinMiscSymbols Operator
+highlight link odinPointer Operator
 
-highlight link odinDirective Macro
-highlight link odinTemplate Constant
+highlight link odinReturnOp Operator
+highlight link odinTernaryQMark Operator
+highlight link odinArrayQMark Operator
+highlight link odinTypeQMark Operator
+highlight link odinVariadic Operator
+highlight link odinRange Operator
+highlight link odinInNotIn Operator
 
+highlight link odinComma Operator
+highlight link odinPeriod Operator
+highlight link odinArrayBrackets Operator
+" }}}
+
+" Comments {{{
+highlight link odinCommentNote Todo
 highlight link odinLineComment Comment
 highlight link odinBlockComment Comment
-highlight link odinCommentNote Todo
+" }}}
+" }}}
 
 let b:current_syntax = "odin"
+" vim: set foldmethod=marker:
