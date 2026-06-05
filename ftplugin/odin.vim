@@ -30,10 +30,10 @@ function! s:SearchProc(count, ...) abort
   endwhile
 endfunction
 
-nnoremap <buffer> ]] :<C-u>call <SID>SearchProc(v:count1)<CR>
-xnoremap <buffer> ]] :<C-u>call <SID>SearchProc(v:count1)<CR>
-nnoremap <buffer> [[ :<C-u>call <SID>SearchProc(v:count1, 'b')<CR>
-xnoremap <buffer> [[ :<C-u>call <SID>SearchProc(v:count1, 'b')<CR>
+nnoremap <silent><buffer> ]] :<C-u>call <SID>SearchProc(v:count1)<CR>
+xnoremap <silent><buffer> ]] :<C-u>exe "normal! gv"<BAR>call <SID>SearchProc(v:count1)<CR>
+nnoremap <silent><buffer> [[ :<C-u>call <SID>SearchProc(v:count1, 'b')<CR>
+xnoremap <silent><buffer> [[ :<C-u>exe "normal! gv"<BAR>call <SID>SearchProc(v:count1, 'b')<CR>
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
