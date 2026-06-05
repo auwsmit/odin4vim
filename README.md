@@ -1,5 +1,5 @@
 # odin4vim
-A Vim and Neovim plugin to give native-feeling support for the [Odin](https://odin-lang.org/) programming language. Features include: syntax highlighting, proper indenting, `:compiler odin` to set makeprg with quickfix error handling, and `[[`/`]]` to jump between functions.
+A Vim and Neovim plugin to give native-feeling support for the [Odin](https://odin-lang.org/) programming language. Features include: syntax highlighting, proper indenting, `:compiler odin` to have quickfix error handling, and `[[`/`]]` to jump between functions.
 
 The highlighting has been made to very closely match Sublime's Odin highlighting (at least as much as possible given the editor differences). The syntax file and highlight groups should be very easy to read/modify/override for your preferences (there are some disabled optionals such as highlights for constant declarations, for example).
 
@@ -18,6 +18,8 @@ Yes, now there are at least 4 separate odin plugins for vim. You could make the 
 - [vim-plug](https://github.com/junegunn/vim-plug): `Plug 'auwsmit/odin4vim'`
 - Neovim 0.12+ builtin: `vim.pack.add({ 'https://github.com/auwsmit/odin4vim' })`
 - [lazy.nvim](https://github.com/folke/lazy.nvim): `{ 'auwsmit/odin4vim' }`
+
+Run `:compiler odin` in vim to set `'makeprg'` to `odin build .` for that session. Then, running `:make` will build the current directory and fill the quickfix list with any warnings or errors, which can be quickly navigated with `[q`/`]q`.
 
 ## Preview Screenshots
 Font: [Fantasque Sans Mono, sans ligatures](https://github.com/spinda/fantasque-sans-ligatures)
