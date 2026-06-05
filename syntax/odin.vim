@@ -196,7 +196,7 @@ highlight link odinArrayBrackets Operator
 " }}}
 
 " Comments {{{
-highlight link odinShebang Comment
+highlight link odinShebangComment Comment
 highlight link odinCommentNote Todo
 highlight link odinLineComment Comment
 highlight link odinBlockComment Comment
