@@ -20,7 +20,6 @@ let b:undo_ftplugin = 'setlocal commentstring<'
 setlocal suffixesadd=.odin
 setlocal commentstring=//\ %s
 setlocal comments=s1:/*,mb:*,ex:*/,://
-setlocal errorformat=%f(%l:%c)\ %m
 
 function! s:SearchProc(count, ...) abort
   let direction = a:0 ? a:1 : ''
