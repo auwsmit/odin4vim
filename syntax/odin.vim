@@ -23,7 +23,6 @@ syntax keyword odinAsm asm
 " }}}
 
 " Directives and Attributes {{{
-syntax match odinShebang "^#!.*$" display " for shell scripts
 syntax match odinBuildTag "^#+.*$" display contains=odinLineComment, odinBlockComment
 syntax match odinDirective "#\<\w\+\>" display
 syntax region odinAttribute matchgroup=odinAttributeSurround start="@(" end=")" display contains=TOP
@@ -39,6 +38,7 @@ syntax keyword odinMainControl if else when where do defer return
 syntax keyword odinSwitchControl switch case continue break fallthrough
 syntax keyword odinOrUnderscore or_return or_else or_break or_continue
 syntax keyword odinFor for
+syntax keyword odinInNotIn in not_in
 " }}}
 
 " Types {{{
@@ -56,10 +56,14 @@ syntax match odinHex '\v<0[xXh]\x+%(_\x+)*[ijk]?>' display
 " }}}
 
 " Constants {{{
-syntax match odinUserConst "\w*\ze\s*:\s*\w*\s*:" contains=odinProcDeclaration
 syntax keyword odinBool true false
 syntax keyword odinNil nil
 syntax match odinNoInit "---"
+
+" NOTE: Optional, disabled by default to reduce noise.
+"       This highlights any label left of `::` (or `: type :`) as a Constant,
+"       with the exception of proc declarations.
+" syntax match odinUserConst "\w*\ze\s*:\s*\w*\s*:" contains=odinProcDeclaration
 " }}}
 
 " Strings {{{
@@ -86,7 +90,6 @@ syntax match odinArrayQMark "\[\zs?\ze\]" display
 syntax match odinTypeQMark "\.\zs?" display
 syntax match odinVariadic "\.\." display
 syntax match odinRange "\V..=\|..<" display
-syntax keyword odinInNotIn in not_in
 
 " NOTE: Optional, disabled by default to reduce noise
 " syntax match odinSemicolon ";" display
@@ -96,6 +99,7 @@ syntax keyword odinInNotIn in not_in
 " }}}
 
 " Comments {{{
+syntax match odinShebangComment "^#!.*$" display " for running Odin files as a Unix script
 syntax keyword odinCommentNote NOTE TODO XXX FIXME HACK contained
 syntax region odinLineComment start=/\/\// end=/$/  contains=odinCommentNote, odinCommentNote
 syntax region odinBlockComment start=/\v\/\*/ end=/\v\*\// contains=odinBlockComment, odinCommentNote
@@ -120,7 +124,6 @@ highlight link odinAsm Keyword
 " }}}
 
 " Directives and Attributes {{{
-highlight link odinShebang Comment
 highlight link odinDirective Macro
 highlight link odinBuildTag Macro
 highlight link odinAttributeSurround Macro
@@ -136,6 +139,7 @@ highlight link odinMainControl Conditional
 highlight link odinSwitchControl Conditional
 highlight link odinOrUnderscore Conditional
 highlight link odinFor Repeat
+highlight link odinInNotIn Repeat
 " }}}
 
 " Types {{{
@@ -153,10 +157,11 @@ highlight link odinHex Number
 " }}}
 
 " Constants {{{
-highlight link odinUserConst Constant
 highlight link odinBool Boolean
 highlight link odinNil Constant
 highlight link odinNoInit Constant
+
+highlight link odinUserConst Constant
 " }}}
 
 " Strings {{{
@@ -183,7 +188,6 @@ highlight link odinArrayQMark Operator
 highlight link odinTypeQMark Operator
 highlight link odinVariadic Operator
 highlight link odinRange Operator
-highlight link odinInNotIn Operator
 
 highlight link odinComma Operator
 highlight link odinSemicolon Operator
@@ -192,6 +196,7 @@ highlight link odinArrayBrackets Operator
 " }}}
 
 " Comments {{{
+highlight link odinShebang Comment
 highlight link odinCommentNote Todo
 highlight link odinLineComment Comment
 highlight link odinBlockComment Comment
