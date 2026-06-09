@@ -25,8 +25,9 @@ syntax keyword odinAsm asm
 " Directives and Attributes {{{
 syntax match odinBuildTag "^#+.*$" display contains=odinLineComment, odinBlockComment
 syntax match odinDirective "#\<\w\+\>" display
-syntax match odinAttributeShort "@\<\w\+\>" display
+syntax match odinAttributeShort "\v\@<\w+>" display
 syntax region odinAttribute matchgroup=odinAttributeParens start="@(" end=")" display contains=TOP
+syntax region odinAttribute matchgroup=odinAttributeParens start="@(\s\?\w\+\s*)\@=" end="\s*)" display
 " }}}
 
 " Procedures {{{
