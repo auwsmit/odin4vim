@@ -40,4 +40,4 @@ unokai (comes with vim/nvim)
 
 - [habamax/vim-odin](https://github.com/habamax/vim-odin) has intentionally very minimal highlighting, but I wanted it to be more like Sublime's.
 - [Tetralux/odin.vim](https://github.com/Tetralux/odin.vim) had simplistic/poor indenting support, no extra features, and the syntax file was pretty dated and disorganized (mostly due to being initially based on jai back in 2017).
-- [mindhopper/nvim-odin](https://codeberg.org/mindhopper/nvim-odin) is impressive in its scope and features, but in my testing has a lot of odd edge cases and false-positives for highlights. It's just a bit "over-opinionated" for me, but again, is also really cool and impressive. You should check it out as an alternative to odin4vim!
+- [mindhopper/nvim-odin](https://codeberg.org/mindhopper/nvim-odin) is impressive in its scope and features, but is only for neovim, and in my testing has some false-positives for highlights. It's just a bit "over-opinionated" for me, but again, is also really cool and impressive. You should check it out as an alternative to odin4vim!

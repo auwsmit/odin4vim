@@ -25,7 +25,8 @@ syntax keyword odinAsm asm
 " Directives and Attributes {{{
 syntax match odinBuildTag "^#+.*$" display contains=odinLineComment, odinBlockComment
 syntax match odinDirective "#\<\w\+\>" display
-syntax region odinAttribute matchgroup=odinAttributeSurround start="@(" end=")" display contains=TOP
+syntax match odinAttributeShort "@\<\w\+\>" display
+syntax region odinAttribute matchgroup=odinAttributeParens start="@(" end=")" display contains=TOP
 " }}}
 
 " Procedures {{{
@@ -38,7 +39,6 @@ syntax keyword odinMainControl if else when where do defer return
 syntax keyword odinSwitchControl switch case continue break fallthrough
 syntax keyword odinOrUnderscore or_return or_else or_break or_continue
 syntax keyword odinFor for
-syntax keyword odinInNotIn in not_in
 " }}}
 
 " Types {{{
@@ -48,7 +48,7 @@ syntax match odinTemplate "$\<\w\+\>" display
 " }}}
 
 " Numbers {{{
-syntax match odinIntFloat '\v<\d(\d|_)*(\.\d(\d|_)*)?([eE][+-]?\d+)?[ijk]?>' display
+syntax match odinNumber '\v<\d(\d|_)*(\.\d(\d|_)*)?([eE][+-]?\d+)?[ijk]?>' display
 syntax match odinBin '\v<0b[01]+%(_[01]+)*[ijk]?>' display
 syntax match odinOct '\v<0o[0-7]+%(_[0-7]+)*[ijk]?>' display
 syntax match odinDec '\v<0d\d+%(_\d+)*[ijk]?>' display
@@ -74,6 +74,8 @@ syntax match odinEscape display contained /\\\([abefnrtv\\'"]\|x\x\{2}\|u\x\{4}\
 " }}}
 
 " Operators {{{
+syntax keyword odinInNotIn in not_in
+
 syntax match odinArithmeticOp "+\|\*\|/\|%\|-\|!" contains=odinNoInit
 syntax match odinBinaryOp "!\|\~\||\|&" display
 syntax match odinComparison "\V==\|!=\|<\|<=\|>\|>=\|%%\|||" display
@@ -126,7 +128,8 @@ highlight link odinAsm Keyword
 " Directives and Attributes {{{
 highlight link odinDirective Macro
 highlight link odinBuildTag Macro
-highlight link odinAttributeSurround Macro
+highlight link odinAttributeShort Macro
+highlight link odinAttributeParens Macro
 " }}}
 
 " Procedures {{{
@@ -139,7 +142,6 @@ highlight link odinMainControl Conditional
 highlight link odinSwitchControl Conditional
 highlight link odinOrUnderscore Conditional
 highlight link odinFor Repeat
-highlight link odinInNotIn Repeat
 " }}}
 
 " Types {{{
@@ -149,7 +151,7 @@ highlight link odinTemplate Constant
 " }}}
 
 " Numbers {{{
-highlight link odinIntFloat Number
+highlight link odinNumber Number
 highlight link odinBin Number
 highlight link odinOct Number
 highlight link odinDec Number
@@ -172,6 +174,8 @@ highlight link odinEscape SpecialChar
 " }}}
 
 " Operators {{{
+highlight link odinInNotIn Operator
+
 highlight link odinArithmeticOp Operator
 highlight link odinBinaryOp Operator
 highlight link odinComparison Operator
