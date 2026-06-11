@@ -18,21 +18,27 @@ syntax keyword odinContext context
 syntax keyword odinDistinct distinct
 syntax keyword odinUsing using
 syntax keyword odinCast cast auto_cast transmute
-syntax keyword odinGetInfoOf size_of offset_of type_info_of typeid_of type_of align_of
 syntax keyword odinAsm asm
+
+syntax match odinGetInfoOf "\v(size_of|offset_of|type_info_of|typeid_of|type_of|align_of)\ze\("
+
+" NOTE: Optional, disabled by default to match Sublime's highlighting
+" syntax match odinBuiltinProc "\v(len|cap|swizzle|complex|quaternion|real|imag|jmag|kmag|conj)\ze\("
+" syntax match odinBuiltinProc "\v(expand_values|compress_values|min|max|abs|clamp)\ze\("
+" syntax match odinBuiltinProc "\v(soa_zip|soa_unzip|unreachable|raw_data)\ze\("
 " }}}
 
 " Directives and Attributes {{{
 syntax match odinBuildTag "^#+.*$" display contains=odinLineComment, odinBlockComment
 syntax match odinDirective "#\<\w\+\>" display
 syntax match odinAttributeShort "\v\@<\w+>" display
+syntax region odinAttribute matchgroup=odinAttributeShort start="@(\s\?\w\+\s*)\@=" end="\s*)" display
 syntax region odinAttribute matchgroup=odinAttributeParens start="@(" end=")" display contains=TOP
-syntax region odinAttribute matchgroup=odinAttributeParens start="@(\s\?\w\+\s*)\@=" end="\s*)" display
 " }}}
 
 " Procedures {{{
 syntax match odinProcDeclaration "\v<\w*>(\s*:\s*:\s*(#.*\s*)?proc)@=" display
-syntax match odinProcCall "\v\w+\s*(\()@=" display
+syntax match odinProcCall "\v\w+\s*(\()@=" display contains=odinBuiltinProc
 " }}}
 
 " Control flow {{{
@@ -43,23 +49,23 @@ syntax keyword odinFor for
 " }}}
 
 " Types {{{
-syntax keyword odinBasicType string cstring bool b8 b16 b32 b64 rune any rawptr f16 f32 f64 f16le f16be f32le f32be f64le f64be u8 u16 u32 u64 u128 u16le u32le u64le u128le u16be u32be u64be u128be uint uintptr i8 i16 i32 i64 i128 i16le i32le i64le i128le i16be i32be i64be i128be int complex complex32 complex64 complex128 quaternion quaternion64 quaternion128 quaternion256 typeid byte
+syntax keyword odinBasicType string cstring bool b8 b16 b32 b64 rune any rawptr f16 f32 f64 f16le f16be f32le f32be f64le f64be u8 u16 u32 u64 u128 u16le u32le u64le u128le u16be u32be u64be u128be uint uintptr i8 i16 i32 i64 i128 i16le i32le i64le i128le i16be i32be i64be i128be int complex32 complex64 complex128 quaternion64 quaternion128 quaternion256 typeid byte
 syntax keyword odinAdvancedType struct enum union map bit_set bit_field dynamic matrix
-syntax match odinTemplate "$\<\w\+\>" display
 " }}}
 
 " Numbers {{{
-syntax match odinNumber '\v<\d(\d|_)*(\.\d(\d|_)*)?([eE][+-]?\d+)?[ijk]?>' display
-syntax match odinBin '\v<0b[01]+%(_[01]+)*[ijk]?>' display
-syntax match odinOct '\v<0o[0-7]+%(_[0-7]+)*[ijk]?>' display
-syntax match odinDec '\v<0d\d+%(_\d+)*[ijk]?>' display
-syntax match odinHex '\v<0[xXh]\x+%(_\x+)*[ijk]?>' display
+syntax match odinNumber "\v<\d(\d|_)*(\.\d(\d|_)*)?([eE][+-]?\d+)?[ijk]?>" display
+syntax match odinBin "\v<0b[01]+%(_[01]+)*[ijk]?>" display
+syntax match odinOct "\v<0o[0-7]+%(_[0-7]+)*[ijk]?>" display
+syntax match odinDec "\v<0d\d+%(_\d+)*[ijk]?>" display
+syntax match odinHex "\v<0[xXh]\x+%(_\x+)*[ijk]?>" display
 " }}}
 
 " Constants {{{
 syntax keyword odinBool true false
 syntax keyword odinNil nil
 syntax match odinNoInit "---"
+syntax match odinCompileTime "$\<\w\+\>" display
 
 " NOTE: Optional, disabled by default to reduce noise.
 "       This highlights any label left of `::` (or `: type :`) as a Constant,
@@ -70,8 +76,15 @@ syntax match odinNoInit "---"
 " Strings {{{
 syntax region odinRawString start=+`+ end=+`+
 syntax region odinChar start=+'+ skip=+\\\\\|\\'+ end=+'+
-syntax region odinString start=+"+ skip=+\\\\\|\\'+ end=+"+ contains=odinEscape
-syntax match odinEscape display contained /\\\([abefnrtv\\'"]\|x\x\{2}\|u\x\{4}\|U\x\{8}\|[0-7]\{3}\)/
+syntax region odinString start=+"+ skip=+\\\\\|\\'+ end=+"+ keepend contains=odinEscape, odinFmtSpec
+syntax match odinEscape display contained "\\\([abefnrtv\\'"]\|x\x\{2}\|u\x\{4}\|U\x\{8}\|[0-7]\{3}\)"
+
+" C and Python style format specifiers for Odin core:fmt
+" NOTE: Optional, disabled by default to match Sublime.
+"       Also likely to incorrectly highlight strings that are used outside of Odin's fmt package.
+" syntax region odinFmtSpec start="%" end="[vwTtbcrodizxXUmMeEfFgGhHsqp]" contained
+" syntax region odinFmtSpec start="{" end="[{}]" contained
+" syntax match odinFmtSpec "%%\|{{\|}}" contained
 " }}}
 
 " Operators {{{
@@ -91,8 +104,9 @@ syntax match odinReturnOp "->" display
 syntax match odinTernaryQMark "?" display
 syntax match odinArrayQMark "\[\zs?\ze\]" display
 syntax match odinTypeQMark "\.\zs?" display
-syntax match odinVariadic "\.\." display
+syntax match odinVariadic "\V...\?" display
 syntax match odinRange "\V..=\|..<" display
+syntax match odinExpandOp "\V**" display
 
 " NOTE: Optional, disabled by default to reduce noise
 " syntax match odinSemicolon ";" display
@@ -104,8 +118,8 @@ syntax match odinRange "\V..=\|..<" display
 " Comments {{{
 syntax match odinShebangComment "^#!.*$" display " for running Odin files as a Unix script
 syntax keyword odinCommentNote NOTE TODO XXX FIXME HACK contained
-syntax region odinLineComment start=/\/\// end=/$/  contains=odinCommentNote, odinCommentNote
-syntax region odinBlockComment start=/\v\/\*/ end=/\v\*\// contains=odinBlockComment, odinCommentNote
+syntax region odinLineComment start="\/\/" end="$"  contains=odinCommentNote, odinCommentNote
+syntax region odinBlockComment start="\v\/\*" end="\v\*\/" contains=odinBlockComment, odinCommentNote
 syntax sync ccomment odinBlockComment
 " }}}
 " }}} == Definitions END ==
@@ -122,15 +136,22 @@ highlight link odinContext Keyword
 highlight link odinDistinct Keyword
 highlight link odinUsing Keyword
 highlight link odinCast Keyword
-highlight link odinGetInfoOf Keyword
 highlight link odinAsm Keyword
+
+highlight link odinGetInfoOf Keyword
+
+highlight link odinBuiltinProc Keyword
 " }}}
 
 " Directives and Attributes {{{
-highlight link odinDirective Macro
 highlight link odinBuildTag Macro
-highlight link odinAttributeShort Macro
-highlight link odinAttributeParens Macro
+highlight link odinDirective Macro
+highlight link odinAttributeShort Macro " e.g. @foo or @(foo)
+highlight link odinAttributeParens Macro " only the @( and ) are highlighted for @(foo=bar) or @(foo=bar, baz=qux)
+
+" NOTE: Optional, disabled by default to match Sublime's highlighting.
+"       When enabled, the entire AttributeParens will be highlighted as Macro.
+" highlight link odinAttribute Macro
 " }}}
 
 " Procedures {{{
@@ -148,7 +169,6 @@ highlight link odinFor Repeat
 " Types {{{
 highlight link odinBasicType Type
 highlight link odinAdvancedType Structure
-highlight link odinTemplate Constant
 " }}}
 
 " Numbers {{{
@@ -163,6 +183,7 @@ highlight link odinHex Number
 highlight link odinBool Boolean
 highlight link odinNil Constant
 highlight link odinNoInit Constant
+highlight link odinCompileTime Constant
 
 highlight link odinUserConst Constant
 " }}}
@@ -172,6 +193,7 @@ highlight link odinRawString String
 highlight link odinString String
 highlight link odinChar String
 highlight link odinEscape SpecialChar
+highlight link odinFmtSpec SpecialChar
 " }}}
 
 " Operators {{{
@@ -193,6 +215,7 @@ highlight link odinArrayQMark Operator
 highlight link odinTypeQMark Operator
 highlight link odinVariadic Operator
 highlight link odinRange Operator
+highlight link odinExpandOp Operator
 
 highlight link odinComma Operator
 highlight link odinSemicolon Operator
