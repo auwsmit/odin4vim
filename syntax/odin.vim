@@ -33,8 +33,8 @@ syntax match odinGetInfoOf "\v(size_of|offset_of|type_info_of|typeid_of|type_of|
 syntax match odinBuildTag "^#+.*$" contains=odinLineComment, odinBlockComment
 syntax match odinDirective "#\<\w\+\>" display
 syntax match odinAttributeShort "\v\@<\w+>" display
-syntax region odinAttribute matchgroup=odinAttributeShort start="@(\s\?\w\+\s*)\@=" end="\s*)" display
 syntax region odinAttribute matchgroup=odinAttributeParens start="@(" end=")" display contains=TOP
+syntax region odinAttribute matchgroup=odinAttributeShort start="@(\s\?\w\+\s*)\@=" end="\s*)" display
 " }}}
 
 " Procedures {{{
@@ -81,6 +81,10 @@ syntax match odinCompileTime "$\<\w\+\>" display
 "       This highlights any label left of `::` (or `: type :`) as a Constant,
 "       with the exception of proc declarations.
 " syntax match odinUserConst "\w*\ze\s*:\s*\w*\s*:" contains=odinProcDeclaration
+
+" NOTE: Optional, disabled by default to reduce noise.
+"       Highlight all-caps identifiers as Constant, e.g. FOO_BAR
+" syntax match odinConstVar "[A-Z][A-Z0-9_]\+" display
 " }}}
 
 " Strings {{{
@@ -185,6 +189,8 @@ highlight def link odinNoInit Constant
 highlight def link odinCompileTime Constant
 
 highlight def link odinUserConst Constant
+
+highlight def link odinConstVar Constant
 " }}}
 
 " Strings {{{

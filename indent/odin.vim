@@ -13,7 +13,7 @@ set cpo&vim
 let b:undo_indent = 'setlocal cindent< cinoptions< cinkeys< indentexpr<'
 
 setlocal cindent
-setlocal cinoptions=L0,m1,(s,j1,J1,l1,+0,:0,#3
+setlocal cinoptions=L0,m1,(s,j1,J1,l1,+0,:0,#3,i0
 setlocal cinkeys=0{,0},0),0],!^F,:,o,O
 setlocal indentexpr=s:GetOdinIndent(v:lnum)
 
@@ -67,8 +67,6 @@ function s:GetOdinIndent(lnum) abort
         else
             let indent = pindent
         endif
-    elseif pline =~# '\<do\>\s\+\S' && pline !~# '{\s*$'
-        let indent = pindent
     elseif pline =~# '\<switch\>\s.*{\s*$'
         let indent = pindent
     elseif pline =~# '\<case\>\s*.*,\s*\(//.*\)\?$' " https://github.com/habamax/vim-odin/issues/8
@@ -84,7 +82,7 @@ function s:GetOdinIndent(lnum) abort
     elseif pline =~# ':[:=].*}\s*$' && line !~# '^\s*}\s*$'
         let indent = pindent
     elseif pline =~# '^\s*}\s*$'
-        if line !~# '^\s*}' && line !~# '\<case\>\s*.*:\s*$'
+        if line !~# '^\s*}' && line !~# '\<case\>\s*.*:'
             let indent = pindent
         else
             let indent = pindent - shiftwidth()
@@ -105,6 +103,10 @@ function s:GetOdinIndent(lnum) abort
         endfor
     elseif pline =~# '{[^{]*}\s*$' && line !~# '^\s*[})]\s*$' " https://github.com/habamax/vim-odin/issues/2
         let indent = pindent
+    elseif line !~# '^\s*}' && pline =~# '^\s*\%(if\|for\).*\s\+do\%(\s\+\|$\)' " https://github.com/habamax/vim-odin/issues/15
+        if line !~# '\<case\>\s*.*:'
+            let indent = pindent
+        endif
     elseif pline =~# '^\s*}\s*$' " https://github.com/habamax/vim-odin/issues/3
         " Find line with opening { and check if there is a label:
         " If there is, return indent of the closing }
